@@ -1,17 +1,13 @@
-
 var app =  require('./config/server');
 
-app.get('/',function(req, res){
-    res.render('home/index');
-})
+var rotaNoticias = require('./app/routes/noticias');
+var rotaFormularioNoticia = require('./app/routes/formulario_inclusao_noticia');
+var rotaHome = require('./app/routes/home');
 
-app.get('/formulario_inclusao_noticia',function(req, res){
-    res.render('admin/form_add_noticia');
-})
+rotaNoticias(app);
+rotaFormularioNoticia(app);
+rotaHome(app);
 
-app.get('/noticias',function(req, res){
-    res.render('noticias/noticias');
-})
 app.listen(3000,function(){
     console.log('servidor com nodemon iniciado');
 });
