@@ -1,7 +1,5 @@
-var express = require('express');
-var app = express();
-app.set('view engine', 'ejs')
 
+var app =  require('./config/server');
 
 app.get('/',function(req, res){
     res.render('home/index');
