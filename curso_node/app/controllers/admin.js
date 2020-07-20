@@ -14,7 +14,7 @@ module.exports.noticias_salvar = function(app,req,res){
 
     var erros = req.validationErrors();
     if(erros){
-        
+        console.log(noticia)
         res.render('admin/form_add_noticia', {val : erros, noticia : noticia});
         return;
     }
