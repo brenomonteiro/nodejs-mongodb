@@ -22,6 +22,20 @@ io.on('connection',(socket)=>{
     socket.broadcast.emit('msgParaCliente',
         {apelido:data.apelido,
             mensagem: data.mensagem})
+            
+            if(data.apelido_atualizado_nos_clientes == 0){
+                console.log(data.apelido_atualizado_nos_clientes)
+            socket.emit('participantesParaCliente',
+        {apelido:data.apelido,
+           })
+
+    socket.broadcast.emit('participantesParaCliente',
+           {apelido:data.apelido
+              });
+            }
     });
+
+    
+    
 });
 
