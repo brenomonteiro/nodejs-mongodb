@@ -141,9 +141,9 @@ app.put('/api/:id',function(req,res){
         mongoclient.collection("postagens",function(err,collection){
             collection.update(
                 {_id:ObjectId(req.params.id)},
-                {$push:{comentários:{
-                    id_comentário:new ObjectId,
-                    comentário: req.body.comentario}}},
+                {$push:{comentarios:{
+                    id_comentario:new ObjectId,
+                    comentario: req.body.comentario}}},
                 {},
                 function(err,records){
                     if(err){
@@ -163,11 +163,16 @@ app.put('/api/:id',function(req,res){
 
 //DELETE
 app.delete('/api/:id',function(req,res){
-    var dados = req.body;
+    
     db.open(function(err, mongoclient){
         mongoclient.collection("postagens",function(err,collection){
-            collection.remove(
-                {_id:ObjectId(req.params.id)},
+            collection.update(
+                {},
+                {$pull:{
+                    comentarios:{id_comentario:ObjectId(req.params.id)}
+                }
+            },
+            {multi:true},
                
                 function(err,records){
                     if(err){
