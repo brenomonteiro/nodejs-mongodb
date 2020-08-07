@@ -11,6 +11,14 @@ var app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(multiparty());
+
+app.use(function(req,res,next){
+    res.setHeader("Access-Control-Allow-Origin","*");
+    res.setHeader("Access-Control-Allow-Methods","GET,POST,PUT,DELETE");
+    res.setHeader("Access-Control-Allow-Headers","content-type");
+    res.setHeader("Access-Control-Allow-Credentials",true);
+    next();
+});
 var port = 80;
 app.listen(port);
 
@@ -71,6 +79,7 @@ app.post('/api',function(req,res){
 
 //GET ALL
 app.get('/api',function(req,res){
+    res.setHeader("Access-Control-Allow-Origin","*");
     var dados = req.body;
     db.open(function(err, mongoclient){
         mongoclient.collection("postagens",function(err,collection){
@@ -87,6 +96,20 @@ app.get('/api',function(req,res){
         });
     });
     //res.send(dados);
+});
+
+app.get('/imagens/:imagem',function(req,res){
+    var img = req.params.imagem;
+
+    fs.readFile('./uploads/'+img,function(err,content){
+        if(err){
+            res.status(400).json(err);
+            return;
+        }
+
+        res.writeHead(200,{'content-type':'image/jpg'});
+        res.end(content);
+    });
 });
 
 //GET BY ID
@@ -111,12 +134,16 @@ app.get('/api/:id',function(req,res){
 
 //PUT
 app.put('/api/:id',function(req,res){
+   
+    //res.setHeader("Access-Control-Allow-Origin","*");
     var dados = req.body;
     db.open(function(err, mongoclient){
         mongoclient.collection("postagens",function(err,collection){
             collection.update(
                 {_id:ObjectId(req.params.id)},
-                {$set:{titulo:req.body.titulo}},
+                {$push:{comentários:{
+                    id_comentário:new ObjectId,
+                    comentário: req.body.comentario}}},
                 {},
                 function(err,records){
                     if(err){
